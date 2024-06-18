@@ -47,7 +47,7 @@ gulp.task('zip',
 // Delete the "dist" folder
 // This happens every time a build starts
 function clean(done) {
-  rimraf('dist', done);
+  rimraf('docs', done);
 }
 
 // Compile layouts, pages, and partials into flat HTML files
@@ -61,7 +61,7 @@ function pages() {
       helpers: 'src/helpers'
     }))
     .pipe(inky())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 }
 
 // Reset Panini's cache of layouts and partials
@@ -79,30 +79,30 @@ function sass() {
     }).on('error', dartSass.logError))
     .pipe($.if(PRODUCTION, $.uncss(
       {
-        html: ['dist/**/*.html']
+        html: ['docs/**/*.html']
       })))
     .pipe($.if(!PRODUCTION, $.sourcemaps.write()))
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('docs/css'));
 }
 
 // Copy and compress images
 function images() {
   return gulp.src(['src/assets/img/**/*', '!src/assets/img/archive/**/*'])
     .pipe($.imagemin())
-    .pipe(gulp.dest('./dist/assets/img'));
+    .pipe(gulp.dest('./docs/assets/img'));
 }
 
 // Inline CSS and minify HTML
 function inline() {
-  return gulp.src('dist/**/*.html')
-    .pipe($.if(PRODUCTION, inliner('dist/css/app.css')))
-    .pipe(gulp.dest('dist'));
+  return gulp.src('docs/**/*.html')
+    .pipe($.if(PRODUCTION, inliner('docs/css/app.css')))
+    .pipe(gulp.dest('docs'));
 }
 
 // Start a server with LiveReload to preview the site in
 function server(done) {
   browser.init({
-    server: 'dist'
+    server: 'docs'
   });
   done();
 }
@@ -156,7 +156,7 @@ function aws() {
     'Cache-Control': 'max-age=315360000, no-transform, public'
   };
 
-  return gulp.src('./dist/assets/img/*')
+  return gulp.src('./docs/assets/img/*')
     // publisher will add Content-Length, Content-Type and headers specified above
     // If not specified it will set x-amz-acl to public-read by default
     .pipe(publisher.publish(headers))
@@ -172,10 +172,10 @@ function aws() {
 function litmus() {
   var awsURL = !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
 
-  return gulp.src('dist/**/*.html')
+  return gulp.src('docs/**/*.html')
     .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1"+ awsURL)))
     .pipe($.litmus(CONFIG.litmus))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 }
 
 // Send email to specified email for testing. If no AWS creds then do not replace img urls.
@@ -186,15 +186,15 @@ function mail() {
     CONFIG.mail.to = [EMAIL];
   }
 
-  return gulp.src('dist/**/*.html')
+  return gulp.src('docs/**/*.html')
     .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1"+ awsURL)))
     .pipe($.mail(CONFIG.mail))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 }
 
 // Copy and compress into Zip
 function zip() {
-  var dist = 'dist';
+  var dist = 'docs';
   var ext = '.html';
 
   function getHtmlFiles(dir) {
@@ -221,13 +221,13 @@ function zip() {
     var moveImages = gulp.src(sourcePath)
       .pipe($.htmlSrc({ selector: 'img'}))
       .pipe($.rename(function (currentpath) {
-        currentpath.dirname = path.join(fileName, currentpath.dirname.replace('dist', ''));
+        currentpath.dirname = path.join(fileName, currentpath.dirname.replace('docs', ''));
         return currentpath;
       }));
 
     return merge(moveHTML, moveImages)
       .pipe($.zip(fileName+ '.zip'))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest('docs'));
   });
 
   return merge(moveTasks);
