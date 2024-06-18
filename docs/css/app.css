@@ -379,9 +379,7 @@ body .mt-2 {
   margin-top: 20px;
   Margin-top: 20px;
 }
-body .my-5 {
-  margin-bottom: 50px;
-  Margin-bottom: 50px;
+body .mt-5 {
   margin-top: 50px;
   Margin-top: 50px;
 }
@@ -405,6 +403,7 @@ body img {
 .white.container {
   border-radius: 8px;
   background: #ffffff;
+  box-shadow: 0px 14px 30px rgba(78, 46, 47, 0.08);
 }
 .white.container th.columns {
   padding-top: 30px;

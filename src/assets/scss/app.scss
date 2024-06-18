@@ -89,6 +89,11 @@ body {
 		Margin-top: 20px;
 	}
 
+	.mt-5 {
+		margin-top: 50px;
+		Margin-top: 50px;
+	}
+
 	.my-5 {
 		margin-bottom: 50px;
 		Margin-bottom: 50px;
@@ -121,6 +126,7 @@ body {
 .white.container  {
 	border-radius: 8px;
 	background: #ffffff;
+	box-shadow: 0px 14px 30px rgba(78, 46, 47, 0.08);
 	td.columns,
 	td.column,
 	th.columns,
