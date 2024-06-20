@@ -383,6 +383,9 @@ body .mt-5 {
   margin-top: 50px;
   Margin-top: 50px;
 }
+body .pb-0 th.columns {
+  padding-bottom: 0;
+}
 body a,
 body img {
   display: inline-block;

@@ -101,6 +101,12 @@ body {
 		Margin-top: 50px;
 	}
 
+	.pb-0 {
+		td.columns, td.column, th.columns, th.column {
+			padding-bottom: 0;
+		}
+	}
+
 
 	a,
 	img {
